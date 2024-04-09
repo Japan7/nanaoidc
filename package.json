@@ -13,10 +13,10 @@
     "preview": "node .output/server/index.mjs"
   },
   "devDependencies": {
-    "@discordjs/rest": "^2.2.0",
-    "@types/oidc-provider": "^8.4.4",
-    "discord-api-types": "^0.37.79",
-    "nitropack": "latest",
-    "oidc-provider": "^8.4.5"
+    "@discordjs/rest": "2.2.0",
+    "@types/oidc-provider": "8.4.4",
+    "discord-api-types": "0.37.79",
+    "nitropack": "2.9.6",
+    "oidc-provider": "8.4.5"
   }
 }

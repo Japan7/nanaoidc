@@ -34,6 +34,12 @@ export class Account implements OidcAccount {
     };
 
     if (scopeSet.has("profile")) {
+      let picture: string;
+      if (this.infos.member.avatar) {
+        picture = `https://cdn.discordapp.com/guilds/${userConfig.discord.guildId}/users/${this.infos.user.id}/avatars/${this.infos.member.avatar}.webp`;
+      } else if (this.infos.user.avatar) {
+        picture = `https://cdn.discordapp.com/avatars/${this.infos.user.id}/${this.infos.user.avatar}.webp`;
+      }
       result = {
         ...result,
         birthdate: undefined,
@@ -44,7 +50,7 @@ export class Account implements OidcAccount {
         middle_name: undefined,
         name: this.infos.user.global_name,
         nickname: this.infos.member.nick,
-        picture: undefined,
+        picture,
         preferred_username: this.infos.user.username,
         profile: undefined,
         updated_at: undefined,
@@ -62,10 +68,14 @@ export class Account implements OidcAccount {
     }
 
     if (scopeSet.has("groups")) {
-      result = {
-        ...result,
-        groups: this.infos.member.roles,
-      };
+      const groups = [userConfig.baseGroup];
+      for (const role of this.infos.member.roles) {
+        const mapped = userConfig.discord.roles[role];
+        if (mapped) {
+          groups.push(mapped);
+        }
+      }
+      result = { ...result, groups };
     }
 
     return result;

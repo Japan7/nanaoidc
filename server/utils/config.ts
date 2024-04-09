@@ -1,13 +1,16 @@
+import type { Snowflake } from "discord-api-types/globals";
 import { readFileSync } from "node:fs";
 import type { ClientMetadata } from "oidc-provider";
 
 export interface UserConfig {
   publicUrl: string;
   sessionPassword: string;
+  baseGroup: string;
   discord: {
     clientId: string;
     clientSecret: string;
-    guildId: string;
+    guildId: Snowflake;
+    roles: Record<Snowflake, string>;
   };
   clients: ClientMetadata[];
 }

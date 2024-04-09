@@ -1,18 +1,7 @@
-import Provider, {
-  type ClientMetadata,
-  type Configuration,
-} from "oidc-provider";
-
-const clients: ClientMetadata[] = [
-  {
-    client_id: "client",
-    client_secret: "secret",
-    redirect_uris: ["https://openidconnect.net/callback"],
-  },
-];
+import Provider, { type Configuration } from "oidc-provider";
 
 const config: Configuration = {
-  clients,
+  clients: userConfig.clients,
   findAccount: Account.findAccount,
   claims: {
     address: ["address"],

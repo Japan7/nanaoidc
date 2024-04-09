@@ -1,10 +1,14 @@
 {
   "publicUrl": "",
   "sessionPassword": "",
+  "baseGroup": "",
   "discord": {
     "clientId": "",
     "clientSecret": "",
-    "guildId": ""
+    "guildId": "",
+    "roles": {
+      "1234567890": "private-group"
+    }
   },
   "clients": [
     {

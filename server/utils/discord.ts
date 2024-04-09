@@ -1,4 +1,10 @@
-import { RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
+import { REST } from "@discordjs/rest";
+import {
+  RESTPostOAuth2AccessTokenResult,
+  Routes,
+  type RESTGetAPICurrentUserResult,
+  type RESTGetCurrentUserGuildMemberResult,
+} from "discord-api-types/v10";
 
 const endpoints = {
   authorization: "https://discord.com/oauth2/authorize",
@@ -33,4 +39,13 @@ export async function exchangeCode(
     }),
   });
   return await response.json();
+}
+
+export async function fetchUserinfo(accessToken: string) {
+  const rest = new REST({ authPrefix: "Bearer" }).setToken(accessToken);
+  const [user, member] = (await Promise.all([
+    rest.get(Routes.user()),
+    rest.get(Routes.userGuildMember(userConfig.discord.guildId)),
+  ])) as [RESTGetAPICurrentUserResult, RESTGetCurrentUserGuildMemberResult];
+  return { user, member };
 }

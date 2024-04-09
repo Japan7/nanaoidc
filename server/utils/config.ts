@@ -12,6 +12,9 @@ export interface UserConfig {
     guildId: Snowflake;
     roles: Record<Snowflake, string>;
   };
+  forwardAuth: {
+    hosts: Record<string, string[]>;
+  };
   clients: ClientMetadata[];
 }
 

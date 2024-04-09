@@ -8,5 +8,5 @@ export default eventHandler(async (event) => {
   const session = await useTypedSession(event);
   await session.update({ redirect: `${event.path}/../callback` });
 
-  return sendRedirect(event, "/api/discord/login");
+  return sendRedirect(event, "/api/discord/auth");
 });

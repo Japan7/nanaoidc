@@ -1,23 +1,13 @@
-import { REST } from "@discordjs/rest";
-import {
-  Routes,
-  type RESTGetAPICurrentUserResult,
-  type RESTGetCurrentUserGuildMemberResult,
-} from "discord-api-types/v10";
+import assert from "node:assert/strict";
 import type { InteractionResults } from "oidc-provider";
 
 export default eventHandler(async (event) => {
-  const session = await useTypedSession(event);
+  const query = getQuery(event);
+  const { code } = query;
+  assert(typeof code === "string");
 
-  const resp = await exchangeCode(session.data.code);
-  const rest = new REST({ authPrefix: "Bearer" }).setToken(resp.access_token);
-  const [user, member] = (await Promise.all([
-    rest.get(Routes.user()),
-    rest.get(Routes.userGuildMember(userConfig.discord.guildId)),
-  ])) as [
-    user: RESTGetAPICurrentUserResult,
-    member: RESTGetCurrentUserGuildMemberResult
-  ];
+  const resp = await exchangeCode(code);
+  const { user, member } = await fetchUserinfo(resp.access_token);
   userStore.set(user.id, { user, member });
 
   const result: InteractionResults = {

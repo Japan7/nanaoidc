@@ -1,6 +1,6 @@
 {
-  "publicUrl": "",
-  "sessionPassword": "",
+  "publicUrl": "http://localhost:3000",
+  "sessionPassword": "openssl rand -hex 32",
   "baseGroup": "",
   "discord": {
     "clientId": "",
@@ -8,6 +8,11 @@
     "guildId": "",
     "roles": {
       "1234567890": "private-group"
+    }
+  },
+  "forwardAuth": {
+    "hosts": {
+      "sub.localhost": ["group1", "orGroup2"]
     }
   },
   "clients": [

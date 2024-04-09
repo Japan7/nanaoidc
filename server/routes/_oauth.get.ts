@@ -19,7 +19,10 @@ export default eventHandler(async (event) => {
         groups.push(mapped);
       }
     }
-    await session.update({ forwardAuthGroups: groups });
+    await session.update({
+      forwardAuthGroups: groups,
+      forwardAuthExpires: Date.now() + 1000 * 60 * 60 * 24,
+    });
     return sendRedirect(event, session.data.forwardAuthRedirect);
   } else {
     throw createError({ status: 400, message: "Missing required query" });

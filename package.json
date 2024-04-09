@@ -1,5 +1,11 @@
 {
+  "name": "nanaoidc",
   "private": true,
+  "license": "LGPL-3.0-only",
+  "repository": "github:Japan7/nanaoidc",
+  "contributors": [
+    "NextFire <git@yuru.moe>"
+  ],
   "scripts": {
     "build": "nitro build",
     "dev": "nitro dev",

@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import type Provider from "oidc-provider";
 
+/**
+ * Implicit consent
+ */
 export default eventHandler(async (event) => {
   const { req, res } = event.node;
   const interaction = await oidc.interactionDetails(req, res);
@@ -50,5 +53,6 @@ export default eventHandler(async (event) => {
 
   const result = { consent };
   const redirectTo = await oidc.interactionResult(req, res, result);
+
   return sendRedirect(event, redirectTo);
 });

@@ -1,31 +1,13 @@
-import { REST } from "@discordjs/rest";
-import {
-  Routes,
-  type RESTGetAPICurrentUserResult,
-  type RESTGetCurrentUserGuildMemberResult,
-} from "discord-api-types/v10";
+import assert from "node:assert/strict";
 
 export default eventHandler(async (event) => {
-  const params = getQuery(event);
-  const { code } = params;
-  if (typeof code !== "string") {
-    throw createError({ status: 400, message: "Missing code" });
-  }
+  const session = await useTypedSession(event);
 
-  const resp = await exchangeCode(code);
-  const rest = new REST({ authPrefix: "Bearer" }).setToken(resp.access_token);
+  const query = getQuery(event);
+  const { code } = query;
+  assert(typeof code === "string");
+  await session.update({ code });
 
-  const [user, member] = (await Promise.all([
-    rest.get(Routes.user()),
-    rest.get(Routes.userGuildMember(process.env.GUILD_ID)),
-  ])) as [
-    user: RESTGetAPICurrentUserResult,
-    member: RESTGetCurrentUserGuildMemberResult
-  ];
-
-  const session = await useSession(event, {
-    password: process.env.SESSION_PASSWORD,
-  });
   const redirect = session.data.redirect || "/";
   return sendRedirect(event, redirect);
 });

@@ -5,6 +5,8 @@ export default eventHandler(async (event) => {
   const interaction = await oidc.interactionDetails(req, res);
   assert.equal(interaction.prompt.name, "login");
 
-  const params = new URLSearchParams({ redirect: `${event.path}/../callback` });
-  return sendRedirect(event, `/api/discord/login?${params}`);
+  const session = await useTypedSession(event);
+  await session.update({ redirect: `${event.path}/../callback` });
+
+  return sendRedirect(event, "/api/discord/login");
 });

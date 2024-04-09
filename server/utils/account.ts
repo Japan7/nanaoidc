@@ -1,8 +1,9 @@
 import {
   type RESTGetAPICurrentUserResult,
   type RESTGetCurrentUserGuildMemberResult,
-  type Snowflake,
 } from "discord-api-types/v10";
+import Redis from "ioredis";
+import assert from "node:assert/strict";
 import {
   type AccountClaims,
   type FindAccount,
@@ -14,31 +15,39 @@ export interface UserInfos {
   member: RESTGetCurrentUserGuildMemberResult;
 }
 
-export const userStore = new Map<Snowflake, UserInfos>();
+const client = new Redis(userConfig.redisUrl, { keyPrefix: "discord:" });
+
+function userKeyFor(id: string) {
+  return `user:${id}`;
+}
 
 export class Account implements OidcAccount {
   [key: string]: unknown;
 
   constructor(public accountId: string) {}
 
-  get infos(): UserInfos {
-    return userStore.get(this.accountId);
+  async getInfos(): Promise<UserInfos> {
+    const data = await client.get(userKeyFor(this.accountId));
+    assert(data !== null);
+    return JSON.parse(data);
   }
 
   claims: OidcAccount["claims"] = async (use, scope, claims, rejected) => {
+    const { user, member } = await this.getInfos();
+
     const scopeSet = new Set(scope.split(" "));
     // TODO: manage claims and rejected
 
     let result: AccountClaims = {
-      sub: this.infos.user.email,
+      sub: user.email,
     };
 
     if (scopeSet.has("profile")) {
       let picture: string;
-      if (this.infos.member.avatar) {
-        picture = `https://cdn.discordapp.com/guilds/${userConfig.discord.guildId}/users/${this.infos.user.id}/avatars/${this.infos.member.avatar}.webp`;
-      } else if (this.infos.user.avatar) {
-        picture = `https://cdn.discordapp.com/avatars/${this.infos.user.id}/${this.infos.user.avatar}.webp`;
+      if (member.avatar) {
+        picture = `https://cdn.discordapp.com/guilds/${userConfig.discord.guildId}/users/${user.id}/avatars/${member.avatar}.webp`;
+      } else if (user.avatar) {
+        picture = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp`;
       }
       result = {
         ...result,
@@ -46,12 +55,12 @@ export class Account implements OidcAccount {
         family_name: undefined,
         gender: undefined,
         given_name: undefined,
-        locale: this.infos.user.locale,
+        locale: user.locale,
         middle_name: undefined,
-        name: this.infos.user.global_name,
-        nickname: this.infos.member.nick,
+        name: user.global_name,
+        nickname: member.nick,
         picture,
-        preferred_username: this.infos.user.username,
+        preferred_username: user.username,
         profile: undefined,
         updated_at: undefined,
         website: undefined,
@@ -62,14 +71,14 @@ export class Account implements OidcAccount {
     if (scopeSet.has("email")) {
       result = {
         ...result,
-        email: this.infos.user.email,
-        email_verified: this.infos.user.verified,
+        email: user.email,
+        email_verified: user.verified,
       };
     }
 
     if (scopeSet.has("groups")) {
       const groups = [userConfig.baseGroup];
-      for (const role of this.infos.member.roles) {
+      for (const role of member.roles) {
         const mapped = userConfig.discord.roles[role];
         if (mapped) {
           groups.push(mapped);
@@ -80,6 +89,11 @@ export class Account implements OidcAccount {
 
     return result;
   };
+
+  static async save(infos: UserInfos) {
+    assert(infos.user.id === infos.member.user.id);
+    await client.set(userKeyFor(infos.user.id), JSON.stringify(infos));
+  }
 
   static findAccount: FindAccount = async (ctx, sub, token) => {
     return new this(sub);

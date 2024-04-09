@@ -5,6 +5,7 @@ import type { ClientMetadata, JWKS } from "oidc-provider";
 export interface UserConfig {
   publicUrl: string;
   sessionPassword: string;
+  redisUrl: string;
   oidc: {
     cookies: {
       keys: (string | Buffer)[];

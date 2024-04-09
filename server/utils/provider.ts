@@ -1,6 +1,7 @@
 import Provider, { type Configuration } from "oidc-provider";
 
 const config: Configuration = {
+  adapter: RedisAdapter,
   clients: userConfig.clients,
   findAccount: Account.findAccount,
   claims: {
@@ -28,6 +29,7 @@ const config: Configuration = {
   cookies: {
     keys: userConfig.oidc.cookies.keys,
   },
+  expiresWithSession: () => false,
   features: {
     devInteractions: { enabled: false },
   },
@@ -48,7 +50,7 @@ const config: Configuration = {
       return token.resourceServer?.accessTokenTTL || 10 * 60; // 10 minutes in seconds
     },
     DeviceCode: 600 /* 10 minutes in seconds */,
-    Grant: 7 * 24 * 60 * 60 /* 7 days in seconds */,
+    Grant: 24 * 60 * 60 /* 1 day in seconds */,
     IdToken: 3600 /* 1 hour in seconds */,
     Interaction: 3600 /* 1 hour in seconds */,
     RefreshToken: (ctx, token, client) => {
@@ -62,9 +64,9 @@ const config: Configuration = {
         // Non-Sender Constrained SPA RefreshTokens do not have infinite expiration through rotation
         return ctx.oidc.entities.RotatedRefreshToken.remainingTTL;
       }
-      return 7 * 24 * 60 * 60; // 7 days in seconds
+      return 24 * 60 * 60; // 1 day in seconds
     },
-    Session: 7 * 24 * 60 * 60 /* 7 days in seconds */,
+    Session: 24 * 60 * 60 /* 1 day in seconds */,
   },
 };
 

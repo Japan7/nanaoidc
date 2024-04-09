@@ -1,6 +1,7 @@
 {
   "publicUrl": "http://localhost:3000",
   "sessionPassword": "openssl rand -hex 32",
+  "redisUrl": "redis://localhost:6379",
   "oidc": {
     "cookies": {
       "keys": ["openssl rand -hex 32"]

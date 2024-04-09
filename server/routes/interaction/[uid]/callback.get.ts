@@ -7,11 +7,11 @@ export default eventHandler(async (event) => {
   assert(typeof code === "string");
 
   const resp = await exchangeCode(code);
-  const { user, member } = await fetchUserinfo(resp.access_token);
-  userStore.set(user.id, { user, member });
+  const infos = await fetchUserinfo(resp.access_token);
+  await Account.save(infos);
 
   const result: InteractionResults = {
-    login: { accountId: user.id },
+    login: { accountId: infos.user.id },
   };
   const { req, res } = event.node;
   const redirectTo = await provider.interactionResult(req, res, result);

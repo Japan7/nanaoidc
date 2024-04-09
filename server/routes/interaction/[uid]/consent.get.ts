@@ -1,8 +1,10 @@
+import assert from "node:assert/strict";
 import type Provider from "oidc-provider";
 
 export default eventHandler(async (event) => {
   const { req, res } = event.node;
   const interaction = await oidc.interactionDetails(req, res);
+  assert.equal(interaction.prompt.name, "consent");
 
   const {
     prompt: { name, details },

@@ -1,10 +1,16 @@
 import type { Snowflake } from "discord-api-types/globals";
 import { readFileSync } from "node:fs";
-import type { ClientMetadata } from "oidc-provider";
+import type { ClientMetadata, JWKS } from "oidc-provider";
 
 export interface UserConfig {
   publicUrl: string;
   sessionPassword: string;
+  oidc: {
+    cookies: {
+      keys: (string | Buffer)[];
+    };
+    jwks: JWKS;
+  };
   baseGroup: string;
   discord: {
     clientId: string;

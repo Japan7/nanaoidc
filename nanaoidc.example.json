@@ -1,6 +1,14 @@
 {
   "publicUrl": "http://localhost:3000",
   "sessionPassword": "openssl rand -hex 32",
+  "oidc": {
+    "cookies": {
+      "keys": ["openssl rand -hex 32"]
+    },
+    "jwks": {
+      "keys": ["https://mkjwk.org"]
+    }
+  },
   "baseGroup": "",
   "discord": {
     "clientId": "",
@@ -12,7 +20,7 @@
   },
   "forwardAuth": {
     "hosts": {
-      "sub.localhost": ["group1", "orGroup2"]
+      "private.localhost": ["group1", "orGroup2"]
     }
   },
   "clients": [

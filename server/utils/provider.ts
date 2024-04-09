@@ -1,16 +1,36 @@
-import Provider from "oidc-provider";
+import Provider, {
+  type ClientMetadata,
+  type Configuration,
+  type FindAccount,
+} from "oidc-provider";
 
-const configuration = {
-  // ... see the available options in Configuration options section
-  clients: [
-    {
-      client_id: "foo",
-      client_secret: "bar",
-      redirect_uris: ["http://lvh.me:8080/cb"],
-      // + other client properties
+const clients: ClientMetadata[] = [
+  {
+    client_id: "client",
+    client_secret: "secret",
+    redirect_uris: ["https://openidconnect.net/callback"],
+  },
+];
+
+const findAccount: FindAccount = async (ctx, sub, token) => {
+  return {
+    accountId: sub,
+    async claims(use, scope, claims, rejected) {
+      return {
+        sub,
+      };
     },
-  ],
-  // ...
+  };
 };
 
-export const oidc = new Provider(process.env.PUBLIC_URL, configuration);
+const config: Configuration = {
+  clients,
+  findAccount,
+  pkce: { required: () => false }, // FIXME:
+  features: {
+    devInteractions: { enabled: process.env.NODE_ENV !== "production" },
+  },
+};
+
+export const oidc = new Provider(process.env.PUBLIC_URL, config);
+oidc.proxy = true;

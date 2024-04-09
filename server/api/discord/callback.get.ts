@@ -23,5 +23,9 @@ export default eventHandler(async (event) => {
     member: RESTGetCurrentUserGuildMemberResult
   ];
 
-  return { user, member };
+  const session = await useSession(event, {
+    password: process.env.SESSION_PASSWORD,
+  });
+  const redirect = session.data.redirect || "/";
+  return sendRedirect(event, redirect);
 });

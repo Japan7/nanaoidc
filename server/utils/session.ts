@@ -6,4 +6,4 @@ interface SessionData {
 }
 
 export const useTypedSession = (event: H3Event) =>
-  useSession<SessionData>(event, { password: process.env.SESSION_PASSWORD });
+  useSession<SessionData>(event, { password: userConfig.sessionPassword });

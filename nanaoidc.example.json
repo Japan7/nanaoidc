@@ -1,0 +1,16 @@
+{
+  "publicUrl": "",
+  "sessionPassword": "",
+  "discord": {
+    "clientId": "",
+    "clientSecret": "",
+    "guildId": ""
+  },
+  "clients": [
+    {
+      "client_id": "client",
+      "client_secret": "secret",
+      "redirect_uris": ["https://openidconnect.net/callback"]
+    }
+  ]
+}

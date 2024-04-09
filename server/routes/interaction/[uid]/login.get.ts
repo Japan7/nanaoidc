@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 
 export default eventHandler(async (event) => {
   const { req, res } = event.node;
-  const interaction = await oidc.interactionDetails(req, res);
+  const interaction = await provider.interactionDetails(req, res);
   assert.equal(interaction.prompt.name, "login");
 
   const session = await useTypedSession(event);

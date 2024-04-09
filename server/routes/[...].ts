@@ -1,1 +1,1 @@
-export default fromNodeMiddleware(oidc.callback());
+export default fromNodeMiddleware(provider.callback());

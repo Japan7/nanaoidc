@@ -1,4 +1,4 @@
-export default eventHandler(async (event) => {
+export default eventHandler((event) => {
   const authUrl = getAuthorizationUrl({
     scope: "identify email guilds guilds.members.read",
     prompt: "none",

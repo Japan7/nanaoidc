@@ -13,7 +13,7 @@ export default eventHandler(async (event) => {
   const rest = new REST({ authPrefix: "Bearer" }).setToken(resp.access_token);
   const [user, member] = (await Promise.all([
     rest.get(Routes.user()),
-    rest.get(Routes.userGuildMember(process.env.GUILD_ID)),
+    rest.get(Routes.userGuildMember(userConfig.discord.guildId)),
   ])) as [
     user: RESTGetAPICurrentUserResult,
     member: RESTGetCurrentUserGuildMemberResult
@@ -24,6 +24,6 @@ export default eventHandler(async (event) => {
     login: { accountId: user.id },
   };
   const { req, res } = event.node;
-  const redirectTo = await oidc.interactionResult(req, res, result);
+  const redirectTo = await provider.interactionResult(req, res, result);
   return sendRedirect(event, redirectTo);
 });

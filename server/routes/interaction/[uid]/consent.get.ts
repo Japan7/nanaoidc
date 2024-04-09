@@ -6,7 +6,7 @@ import type Provider from "oidc-provider";
  */
 export default eventHandler(async (event) => {
   const { req, res } = event.node;
-  const interaction = await oidc.interactionDetails(req, res);
+  const interaction = await provider.interactionDetails(req, res);
   assert.equal(interaction.prompt.name, "consent");
 
   const {
@@ -20,10 +20,10 @@ export default eventHandler(async (event) => {
 
   if (grantId) {
     // we'll be modifying existing grant in existing session
-    grant = await oidc.Grant.find(grantId);
+    grant = await provider.Grant.find(grantId);
   } else {
     // we're establishing a new grant
-    grant = new oidc.Grant({
+    grant = new provider.Grant({
       accountId,
       clientId: params.client_id as string,
     });
@@ -52,7 +52,7 @@ export default eventHandler(async (event) => {
   }
 
   const result = { consent };
-  const redirectTo = await oidc.interactionResult(req, res, result);
+  const redirectTo = await provider.interactionResult(req, res, result);
 
   return sendRedirect(event, redirectTo);
 });

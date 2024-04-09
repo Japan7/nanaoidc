@@ -44,5 +44,5 @@ const config: Configuration = {
   },
 };
 
-export const oidc = new Provider(process.env.PUBLIC_URL, config);
-oidc.proxy = true;
+export const provider = new Provider(userConfig.publicUrl, config);
+provider.proxy = true;

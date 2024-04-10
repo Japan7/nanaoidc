@@ -17,8 +17,7 @@ export default eventHandler(async (event) => {
       throw createError({ status: 401, message: "Missing required group" });
     }
   } else {
-    const forwardAuthRedirect = `${proto}://${host}${uri}`;
-    const params = new URLSearchParams({ forwardAuthRedirect });
+    const params = new URLSearchParams({ proto, host, uri });
     return sendRedirect(event, `http://${host}/_oauth?${params}`);
   }
 });

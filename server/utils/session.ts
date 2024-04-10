@@ -2,7 +2,6 @@ import { type H3Event } from "h3";
 
 interface SessionData {
   redirect: string;
-  forwardAuthRedirect: string;
   forwardAuthGroups: string[];
   forwardAuthExpires: number;
 }

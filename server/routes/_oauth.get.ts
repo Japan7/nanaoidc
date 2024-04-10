@@ -3,10 +3,9 @@ import assert from "node:assert/strict";
 export default eventHandler(async (event) => {
   const session = await useTypedSession(event);
   const query = getQuery(event);
-  const { code, forwardAuthRedirect } = query;
-  if (forwardAuthRedirect) {
-    assert(typeof forwardAuthRedirect === "string");
-    await session.update({ redirect: ".", forwardAuthRedirect });
+  const { code, proto, host, uri } = query;
+  if (host) {
+    await session.update({ redirect: `${proto}://${host}${uri}` });
     return sendRedirect(event, `${userConfig.publicUrl}/api/discord/auth`);
   } else if (code) {
     assert(typeof code === "string");
@@ -23,7 +22,7 @@ export default eventHandler(async (event) => {
       forwardAuthGroups: groups,
       forwardAuthExpires: Date.now() + 1000 * 60 * 60 * 24,
     });
-    return sendRedirect(event, session.data.forwardAuthRedirect);
+    return sendRedirect(event, session.data.redirect || "/");
   } else {
     throw createError({ status: 400, message: "Missing required query" });
   }

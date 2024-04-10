@@ -17,8 +17,8 @@ FROM base AS runner
 WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nitro
-COPY --from=builder /app .
+COPY --from=builder /app/.output .
 USER nitro
 EXPOSE 3000
 ENV PORT 3000
-CMD ["npm", "run", "start"]
+CMD ["node", "server/index.mjs"]

@@ -6,7 +6,11 @@ export default eventHandler(async (event) => {
   const { code, proto, host, uri } = query;
   if (host) {
     await session.update({ redirect: `${proto}://${host}${uri}` });
-    return sendRedirect(event, `${userConfig.publicUrl}/api/discord/auth`);
+    const params = new URLSearchParams({ redirect: `http://${host}/_oauth` });
+    return sendRedirect(
+      event,
+      `${userConfig.publicUrl}/api/discord/auth?${params}`
+    );
   } else if (code) {
     assert(typeof code === "string");
     const resp = await exchangeCode(code);

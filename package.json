@@ -20,6 +20,8 @@
     "ioredis": "5.3.2",
     "lodash-es": "4.17.21",
     "nitropack": "2.9.6",
-    "oidc-provider": "8.4.5"
+    "oidc-provider": "8.4.5",
+    "psl": "1.9.0",
+    "wildcard": "2.0.1"
   }
 }

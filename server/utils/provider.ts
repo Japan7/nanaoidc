@@ -1,10 +1,4 @@
 import Provider, { type Configuration } from "oidc-provider";
-import * as net from "node:net";
-import { URL } from "node:url";
-
-import wildcard from "wildcard";
-import psl from "psl";
-import { errors } from "oidc-provider";
 
 const config: Configuration = {
   adapter: RedisAdapter,
@@ -36,41 +30,6 @@ const config: Configuration = {
     keys: userConfig.oidc.cookies.keys,
   },
   expiresWithSession: () => false,
-  extraClientMetadata: {
-    // https://github.com/panva/node-oidc-provider/blob/87cd3c5c335cb30074612b405bd581c6bc76a98d/recipes/redirect_uri_wildcards.md
-    properties: ["redirect_uris"],
-    validator(ctx, key, value: string[], metadata) {
-      if (key === "redirect_uris") {
-        for (const redirectUri of value) {
-          if (redirectUri.includes("*")) {
-            const { hostname, href } = new URL(redirectUri);
-            if (href.split("*").length !== 2) {
-              throw new errors.InvalidClientMetadata(
-                "redirect_uris with a wildcard may only contain a single one"
-              );
-            }
-            if (!hostname.includes("*")) {
-              throw new errors.InvalidClientMetadata(
-                "redirect_uris may only have a wildcard in the hostname"
-              );
-            }
-            const test = hostname.replace("*", "test");
-            // checks that the wildcard is for a full subdomain e.g. *.panva.cz, not *suffix.panva.cz
-            if (!wildcard(hostname, test)) {
-              throw new errors.InvalidClientMetadata(
-                "redirect_uris with a wildcard must only match the whole subdomain"
-              );
-            }
-            if (!psl.get(hostname.split("*.")[1])) {
-              throw new errors.InvalidClientMetadata(
-                "redirect_uris with a wildcard must not match an eTLD+1 of a known public suffix domain"
-              );
-            }
-          }
-        }
-      }
-    },
-  },
   features: {
     devInteractions: { enabled: false },
   },
@@ -113,21 +72,3 @@ const config: Configuration = {
 
 export const provider = new Provider(userConfig.publicUrl, config);
 provider.proxy = true;
-
-// https://github.com/panva/node-oidc-provider/blob/87cd3c5c335cb30074612b405bd581c6bc76a98d/recipes/redirect_uri_wildcards.md
-// redirectUriAllowed on a client prototype checks whether a redirect_uri is allowed or not
-const { redirectUriAllowed } = provider.Client.prototype;
-const hasWildcardHost = (redirectUri) => {
-  const { hostname } = new URL(redirectUri);
-  return hostname.includes("*");
-};
-const wildcardMatches = (redirectUri, wildcardUri) =>
-  !!wildcard(wildcardUri, redirectUri);
-provider.Client.prototype.redirectUriAllowed =
-  function wildcardRedirectUriAllowed(redirectUri) {
-    if (!redirectUri.includes("*")) {
-      return redirectUriAllowed.call(this, redirectUri);
-    }
-    const wildcardUris = this.redirectUris.filter(hasWildcardHost);
-    return wildcardUris.some(wildcardMatches.bind(undefined, redirectUri));
-  };

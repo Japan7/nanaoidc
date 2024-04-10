@@ -9,7 +9,7 @@ export default eventHandler(async (event) => {
     const params = new URLSearchParams({ redirect: `http://${host}/_oauth` });
     return sendRedirect(
       event,
-      `${userConfig.publicUrl}/api/discord/auth?${params}`
+      `${userConfig.publicUrl}/discord/auth?${params}`
     );
   } else if (code) {
     assert(typeof code === "string");

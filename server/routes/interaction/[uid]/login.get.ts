@@ -6,5 +6,5 @@ export default eventHandler(async (event) => {
   assert.equal(interaction.prompt.name, "login");
 
   const params = new URLSearchParams({ redirect: `${event.path}/../callback` });
-  return sendRedirect(event, `/api/discord/auth?${params}`);
+  return sendRedirect(event, `/discord/auth?${params}`);
 });

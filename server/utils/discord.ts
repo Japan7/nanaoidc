@@ -1,31 +1,24 @@
 import { REST } from "@discordjs/rest";
 import {
+  OAuth2Routes,
   RESTPostOAuth2AccessTokenResult,
   Routes,
   type RESTGetAPICurrentUserResult,
   type RESTGetCurrentUserGuildMemberResult,
 } from "discord-api-types/v10";
 
-const endpoints = {
-  authorization: "https://discord.com/oauth2/authorize",
-  token: "https://discord.com/api/oauth2/token",
-  revocation: "https://discord.com/api/oauth2/token/revoke",
-};
-
 export function getAuthorizationUrl(params: Record<string, string> = {}) {
   const _params = new URLSearchParams({
     client_id: userConfig.discord.clientId,
-    redirect_uri: `${userConfig.publicUrl}/api/discord/callback`,
+    redirect_uri: `${userConfig.publicUrl}/discord/callback`,
     response_type: "code",
     ...params,
   });
-  return `${endpoints.authorization}?${_params}`;
+  return `${OAuth2Routes.authorizationURL}?${_params}`;
 }
 
-export async function exchangeCode(
-  code: string
-): Promise<RESTPostOAuth2AccessTokenResult> {
-  const response = await fetch(endpoints.token, {
+export async function exchangeCode(code: string) {
+  const resp = await fetch(OAuth2Routes.tokenURL, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -35,10 +28,11 @@ export async function exchangeCode(
       client_secret: userConfig.discord.clientSecret,
       grant_type: "authorization_code",
       code,
-      redirect_uri: `${userConfig.publicUrl}/api/discord/callback`,
+      redirect_uri: `${userConfig.publicUrl}/discord/callback`,
     }),
   });
-  return await response.json();
+  const json = await resp.json();
+  return json as RESTPostOAuth2AccessTokenResult;
 }
 
 export async function fetchUserinfo(accessToken: string) {

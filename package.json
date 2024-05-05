@@ -13,7 +13,7 @@
     "preview": "node .output/server/index.mjs"
   },
   "devDependencies": {
-    "@discordjs/rest": "2.2.0",
+    "@discordjs/rest": "2.3.0",
     "@types/lodash-es": "4.17.12",
     "@types/oidc-provider": "8.4.4",
     "discord-api-types": "0.37.83",

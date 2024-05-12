@@ -21,10 +21,5 @@
     "lodash-es": "4.17.21",
     "nitropack": "2.9.6",
     "oidc-provider": "8.4.6"
-  },
-  "overrides": {
-    "@discordjs/rest": {
-      "undici": ">=5.28.4"
-    }
   }
 }

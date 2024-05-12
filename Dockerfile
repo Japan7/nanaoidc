@@ -1,24 +1,14 @@
-# https://nitro.unjs.io/deploy/providers/koyeb#using-a-docker-container
-FROM node:lts-alpine AS base
-
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
-COPY package.json package-lock.json ./
+FROM node:lts-alpine AS builder
+WORKDIR /src
+COPY package.json package-lock.json .npmrc ./
 RUN npm ci
-
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build && npm cache clean --force
 
-FROM base AS runner
+FROM node:lts-alpine AS runner
+ENV NODE_ENV=production
 WORKDIR /app
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nitro
-COPY --from=builder /app/.output .
-USER nitro
+COPY --from=builder --chown=node /src/.output .
+USER node
+CMD [ "server/index.mjs" ]
 EXPOSE 3000
-ENV PORT 3000
-CMD ["node", "server/index.mjs"]

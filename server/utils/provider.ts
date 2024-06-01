@@ -23,6 +23,8 @@ const config: Configuration = {
       "updated_at",
       "website",
       "zoneinfo",
+      // additional claims
+      "discord_id",
     ],
     groups: ["groups"],
   },

@@ -65,6 +65,7 @@ export class Account implements OidcAccount {
         updated_at: undefined,
         website: undefined,
         zoneinfo: undefined,
+        discord_id: user.id,
       };
     }
 

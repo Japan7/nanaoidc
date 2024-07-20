@@ -70,6 +70,8 @@ const config: Configuration = {
     },
     Session: 24 * 60 * 60 /* 1 day in seconds */,
   },
+  clientBasedCORS: (ctx, origin, client) =>
+    client.redirectUris.some((uri) => uri.startsWith(origin)),
 };
 
 export const provider = new Provider(userConfig.publicUrl, config);

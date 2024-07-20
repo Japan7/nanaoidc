@@ -34,7 +34,7 @@ const config: Configuration = {
   expiresWithSession: () => false,
   features: {
     devInteractions: { enabled: false },
-    introspection: { enabled: true },
+    introspection: { enabled: true, allowedPolicy: () => true },
   },
   jwks: userConfig.oidc.jwks,
   pkce: { required: () => false },

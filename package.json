@@ -15,7 +15,7 @@
   "devDependencies": {
     "@discordjs/rest": "2.3.0",
     "@types/lodash-es": "4.17.12",
-    "@types/oidc-provider": "8.5.1",
+    "@types/oidc-provider": "8.5.2",
     "discord-api-types": "0.37.93",
     "ioredis": "5.4.1",
     "lodash-es": "4.17.21",

@@ -1,4 +1,3 @@
-import { URL } from "node:url";
 import Provider, { errors, type Configuration } from "oidc-provider";
 import psl from "psl";
 import wildcard from "wildcard";
@@ -51,8 +50,8 @@ const config: Configuration = {
   expiresWithSession: () => false,
 
   extraClientMetadata: {
-    // https://github.com/panva/node-oidc-provider/blob/87cd3c5c335cb30074612b405bd581c6bc76a98d/recipes/redirect_uri_wildcards.md
-    properties: ["redirect_uris"],
+    // https://github.com/tsedio/tsed/tree/2a61da42a005d335ea85ba917d5e631cb3cd43d5/packages/security/oidc-provider-plugin-wildcard-redirect-uri
+    properties: ["redirect_uris", "post_logout_redirect_uris"],
     validator: (ctx, key, value: string[], metadata) => {
       if (key === "redirect_uris") {
         for (const redirectUri of value) {
@@ -68,16 +67,33 @@ const config: Configuration = {
                 "redirect_uris may only have a wildcard in the hostname"
               );
             }
-            const test = hostname.replace("*", "test");
-            // checks that the wildcard is for a full subdomain e.g. *.panva.cz, not *suffix.panva.cz
-            if (!wildcard(hostname, test)) {
-              throw new errors.InvalidClientMetadata(
-                "redirect_uris with a wildcard must only match the whole subdomain"
-              );
-            }
             if (!psl.get(hostname.split("*.")[1])) {
               throw new errors.InvalidClientMetadata(
                 "redirect_uris with a wildcard must not match an eTLD+1 of a known public suffix domain"
+              );
+            }
+          }
+        }
+      } else if (key === "post_logout_redirect_uris") {
+        for (const postLogoutRedirectUri of value) {
+          if (postLogoutRedirectUri.includes("*")) {
+            const { hostname, href } = new URL(postLogoutRedirectUri);
+
+            if (href.split("*").length !== 2) {
+              throw new errors.InvalidClientMetadata(
+                "post_logout_redirect_uris with a wildcard may only contain a single one"
+              );
+            }
+
+            if (!hostname.includes("*")) {
+              throw new errors.InvalidClientMetadata(
+                "post_logout_redirect_uris may only have a wildcard in the hostname"
+              );
+            }
+
+            if (!psl.get(hostname.split("*.")[1])) {
+              throw new errors.InvalidClientMetadata(
+                "post_logout_redirect_uris with a wildcard must not match an eTLD+1 of a known public suffix domain"
               );
             }
           }
@@ -136,21 +152,42 @@ const config: Configuration = {
 };
 
 export const provider = new Provider(userConfig.publicUrl, config);
+
 provider.proxy = true;
 
-// https://github.com/panva/node-oidc-provider/blob/87cd3c5c335cb30074612b405bd581c6bc76a98d/recipes/redirect_uri_wildcards.md
-// redirectUriAllowed on a client prototype checks whether a redirect_uri is allowed or not
-const { redirectUriAllowed } = provider.Client.prototype;
 const hasWildcardHost = (redirectUri: string) => {
   const { hostname } = new URL(redirectUri);
   return hostname.includes("*");
 };
+
 const wildcardMatches = (redirectUri: string, wildcardUri: string) =>
   !!wildcard(wildcardUri, redirectUri);
-provider.Client.prototype.redirectUriAllowed = function (redirectUri) {
-  if (!redirectUri.includes("*")) {
-    return redirectUriAllowed.call(this, redirectUri);
-  }
-  const wildcardUris = this.redirectUris.filter(hasWildcardHost);
-  return wildcardUris.some(wildcardMatches.bind(undefined, redirectUri));
-};
+
+export function wildcardRedirectUriAllowed(
+  originalRedirectUriAllowed: any,
+  redirectUriOrPostLogoutRedirectUri: "redirectUris" | "postLogoutRedirectUris"
+) {
+  return function (redirectUri: string) {
+    if (this[redirectUriOrPostLogoutRedirectUri].some(hasWildcardHost)) {
+      const wildcardUris =
+        this[redirectUriOrPostLogoutRedirectUri].filter(hasWildcardHost);
+      return (
+        wildcardUris.some(wildcardMatches.bind(undefined, redirectUri)) ||
+        originalRedirectUriAllowed.call(this, redirectUri)
+      );
+    }
+    return originalRedirectUriAllowed.call(this, redirectUri);
+  };
+}
+
+const { redirectUriAllowed, postLogoutRedirectUriAllowed } =
+  provider.Client.prototype;
+provider.Client.prototype.redirectUriAllowed = wildcardRedirectUriAllowed(
+  redirectUriAllowed,
+  "redirectUris"
+);
+provider.Client.prototype.postLogoutRedirectUriAllowed =
+  wildcardRedirectUriAllowed(
+    postLogoutRedirectUriAllowed,
+    "postLogoutRedirectUris"
+  );

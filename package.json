@@ -7,7 +7,7 @@
     "NextFire <git@yuru.moe>"
   ],
   "scripts": {
-    "build": "nitro build",
+    "build": "tsc --noEmit && nitro build",
     "dev": "nitro dev",
     "prepare": "nitro prepare",
     "preview": "node .output/server/index.mjs"
@@ -23,6 +23,7 @@
     "nitropack": "2.10.4",
     "oidc-provider": "8.6.0",
     "psl": "1.15.0",
+    "typescript": "5.6.2",
     "wildcard": "2.0.1"
   }
 }

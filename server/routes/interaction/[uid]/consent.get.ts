@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import type Provider from "oidc-provider";
+import { provider } from "~/utils/provider";
 
 /**
  * Implicit consent

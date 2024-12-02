@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { provider } from "~/utils/provider";
 
 export default eventHandler(async (event) => {
   const { req, res } = event.node;

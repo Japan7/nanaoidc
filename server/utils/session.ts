@@ -1,4 +1,5 @@
 import { type H3Event } from "h3";
+import { userConfig } from "./config";
 
 interface SessionData {
   redirect: string;

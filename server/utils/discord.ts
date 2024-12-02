@@ -6,6 +6,7 @@ import {
   type RESTGetAPICurrentUserResult,
   type RESTGetCurrentUserGuildMemberResult,
 } from "discord-api-types/v10";
+import { userConfig } from "./config";
 
 export function getAuthorizationUrl(params: Record<string, string> = {}) {
   const _params = new URLSearchParams({

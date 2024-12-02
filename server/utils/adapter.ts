@@ -2,6 +2,7 @@
 import Redis from "ioredis";
 import { isEmpty } from "lodash-es";
 import type { Adapter, AdapterPayload } from "oidc-provider";
+import { userConfig } from "./config";
 
 const client = new Redis(userConfig.redisUrl, { keyPrefix: "oidc:" });
 

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { useTypedSession } from "~/utils/session";
 
 export default eventHandler(async (event) => {
   const query = getQuery(event);

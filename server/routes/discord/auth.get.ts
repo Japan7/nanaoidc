@@ -1,6 +1,4 @@
 import assert from "node:assert/strict";
-import { getAuthorizationUrl } from "~/utils/discord";
-import { useTypedSession } from "~/utils/session";
 
 export default eventHandler(async (event) => {
   const query = getQuery(event);

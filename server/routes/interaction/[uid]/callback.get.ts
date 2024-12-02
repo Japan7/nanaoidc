@@ -1,8 +1,5 @@
 import assert from "node:assert/strict";
 import type { InteractionResults } from "oidc-provider";
-import { Account } from "~/utils/account";
-import { exchangeCode, fetchUserinfo } from "~/utils/discord";
-import { provider } from "~/utils/provider";
 
 export default eventHandler(async (event) => {
   const query = getQuery(event);

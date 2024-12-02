@@ -1,6 +1,3 @@
-import { userConfig } from "~/utils/config";
-import { useTypedSession } from "~/utils/session";
-
 export default eventHandler(async (event) => {
   const headers = event.headers;
   const proto = headers.get("x-forwarded-proto");

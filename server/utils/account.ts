@@ -9,7 +9,6 @@ import {
   type FindAccount,
   type Account as OidcAccount,
 } from "oidc-provider";
-import { userConfig } from "./config";
 
 export interface UserInfos {
   user: RESTGetAPICurrentUserResult;

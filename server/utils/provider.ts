@@ -1,9 +1,6 @@
 import Provider, { errors, type Configuration } from "oidc-provider";
 import psl from "psl";
 import wildcard from "wildcard";
-import { Account } from "./account";
-import { RedisAdapter } from "./adapter";
-import { userConfig } from "./config";
 
 const config: Configuration = {
   adapter: RedisAdapter,

@@ -1,7 +1,4 @@
 import assert from "node:assert/strict";
-import { userConfig } from "~/utils/config";
-import { exchangeCode, fetchUserinfo } from "~/utils/discord";
-import { useTypedSession } from "~/utils/session";
 
 export default eventHandler(async (event) => {
   const session = await useTypedSession(event);

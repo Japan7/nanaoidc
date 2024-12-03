@@ -7,10 +7,11 @@
     "NextFire <git@yuru.moe>"
   ],
   "scripts": {
-    "build": "tsc --noEmit && nitro build",
+    "build": "nitro build",
     "dev": "nitro dev",
     "prepare": "nitro prepare",
-    "preview": "node .output/server/index.mjs"
+    "preview": "node .output/server/index.mjs",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@discordjs/rest": "2.4.0",

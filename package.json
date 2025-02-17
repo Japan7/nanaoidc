@@ -22,7 +22,7 @@
     "ioredis": "5.5.0",
     "lodash-es": "4.17.21",
     "nitropack": "2.10.4",
-    "oidc-provider": "8.7.0",
+    "oidc-provider": "8.8.0",
     "psl": "1.15.0",
     "typescript": "5.7.3",
     "wildcard": "2.0.1"

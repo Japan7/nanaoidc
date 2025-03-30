@@ -88,6 +88,8 @@ export class Account implements OidcAccount {
       result = { ...result, groups };
     }
 
+    console.debug(scope, result)
+
     return result;
   };
 

@@ -24,7 +24,7 @@
     "nitropack": "2.11.8",
     "oidc-provider": "8.8.1",
     "psl": "1.15.0",
-    "typescript": "5.8.2",
+    "typescript": "5.8.3",
     "wildcard": "2.0.1"
   }
 }

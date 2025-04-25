@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@discordjs/rest": "2.4.3",
+    "@discordjs/rest": "2.5.0",
     "@types/lodash-es": "4.17.12",
     "@types/oidc-provider": "8.8.1",
     "@types/psl": "1.1.3",

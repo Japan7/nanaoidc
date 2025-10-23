@@ -2,7 +2,7 @@ import {
   type RESTGetAPICurrentUserResult,
   type RESTGetCurrentUserGuildMemberResult,
 } from "discord-api-types/v10";
-import Redis from "ioredis";
+import Redis from "iovalkey";
 import assert from "node:assert/strict";
 import {
   type AccountClaims,

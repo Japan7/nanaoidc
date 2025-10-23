@@ -1,5 +1,5 @@
 // https://github.com/panva/node-oidc-provider/blob/87cd3c5c335cb30074612b405bd581c6bc76a98d/example/adapters/redis.js
-import Redis from "ioredis";
+import Redis from "iovalkey";
 import { isEmpty } from "lodash-es";
 import type { Adapter, AdapterPayload } from "oidc-provider";
 

@@ -20,7 +20,7 @@
     "@types/psl": "1.1.3",
     "discord-api-types": "0.38.37",
     "iovalkey": "0.3.3",
-    "lodash-es": "4.17.22",
+    "lodash-es": "4.17.23",
     "nitropack": "2.13.1",
     "oidc-provider": "8.8.1",
     "psl": "1.15.0",

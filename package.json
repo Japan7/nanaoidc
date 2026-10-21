@@ -21,7 +21,7 @@
     "discord-api-types": "0.38.56",
     "iovalkey": "0.4.0",
     "lodash-es": "4.18.1",
-    "nitropack": "2.13.4",
+    "nitropack": "2.13.5",
     "oidc-provider": "8.8.1",
     "psl": "1.15.0",
     "typescript": "7.0.2",

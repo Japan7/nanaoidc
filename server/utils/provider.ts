@@ -43,11 +43,8 @@ const config: Configuration = {
   clientBasedCORS: (ctx, origin, client) =>
     client.redirectUris.some((uri) => uri.startsWith(origin)),
 
-  enableHttpPostMethods: true,
-
   cookies: {
     keys: userConfig.oidc.cookies.keys,
-    long: { sameSite: "none" },
   },
 
   expiresWithSession: () => false,
